@@ -1,9 +1,9 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <map>
 #include <stack>
 #include <string>
 
-//через map мы будем определять ранг операции, на создавая отдельных функций
+//С‡РµСЂРµР· map РјС‹ Р±СѓРґРµРј РѕРїСЂРµРґРµР»СЏС‚СЊ СЂР°РЅРі РѕРїРµСЂР°С†РёРё, РЅР° СЃРѕР·РґР°РІР°СЏ РѕС‚РґРµР»СЊРЅС‹С… С„СѓРЅРєС†РёР№
 std::map<std::string, int> operationsRang {
 	{"+", 1},
 	{"-", 1},
@@ -18,13 +18,13 @@ std::map<std::string, int> operationsRang {
 };
 const double eps = 1e-10;
 
-//проверка не является символ операцией или началом функции
+//РїСЂРѕРІРµСЂРєР° РЅР° С„СѓРЅРєС†РёСЋ
 bool isOperation(std::string& strWithExpr, size_t& i) {
 	if (strWithExpr[i] == '+' || strWithExpr[i] == '-' || strWithExpr[i] == '*' || strWithExpr[i] == '/' || strWithExpr[i] == 's' || strWithExpr[i] == 'c' || strWithExpr[i] == 't' || strWithExpr[i] == 'e') return true;
 	return false;
 }
 
-//нахождение функции и записывание ее в стек операций
+//РЅР°С…РѕР¶РґРµРЅРёРµ С„СѓРЅРєС†РёРё Рё Р·Р°РїРёСЃС‹РІР°РЅРёРµ РµРµ РІ СЃС‚РµРє РѕРїРµСЂР°С†РёР№
 std::string funcWrite(std::string& strWithExpr, size_t& i, std::stack<std::string>& operations) {
 	std::string func;
 
@@ -64,11 +64,12 @@ std::string funcWrite(std::string& strWithExpr, size_t& i, std::stack<std::strin
 				std::cerr << "invalid name function. pos: " << i << std::endl;
 			}
 			break;
+		default: return "0";
 	}
 	return func;
 }
 
-//парсинг строки в число
+//РїР°СЂСЃРёРЅРі СЃС‚СЂРѕРєРё РІ С‡РёСЃР»Рѕ
 double numberparse(std::string& strWithExpr, size_t& i) {
 	std::string buf;
 	bool shouldExit = false;
@@ -90,20 +91,18 @@ double numberparse(std::string& strWithExpr, size_t& i) {
 		} else if (strWithExpr[i] == ' ' || isOperation(strWithExpr, i)) {
 			shouldExit = true;
 		}
-
-
 	}
 	return std::stod(buf);
 }
 
-//вызов функции рассчета
+//РІС‹Р·РѕРІ С„СѓРЅРєС†РёРё СЂР°СЃСЃС‡РµС‚Р°
 void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 	double a,b,c;
 	
 	a = numbers.top();
 	numbers.pop();
 
-	//оператор сложения
+	//РѕРїРµСЂР°С‚РѕСЂ СЃР»РѕР¶РµРЅРёСЏ
 	if (operations.top() == "+") {
 		b = numbers.top();
 		numbers.pop();
@@ -111,7 +110,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 		numbers.push(c);
 		operations.pop();
 
-	//оператор умножения
+	//РѕРїРµСЂР°С‚РѕСЂ СѓРјРЅРѕР¶РµРЅРёСЏ
 	} else if (operations.top() == "*") {
 		b = numbers.top();
 		numbers.pop();
@@ -119,7 +118,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 		numbers.push(c);
 		operations.pop();
 
-	//оператор вычитания
+	//РѕРїРµСЂР°С‚РѕСЂ РІС‹С‡РёС‚Р°РЅРёСЏ
 	} else if (operations.top() == "-") {
 		b = numbers.top();
 		numbers.pop();
@@ -127,7 +126,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 		numbers.push(c);
 		operations.pop();
 
-	//оператор деления
+	//РѕРїРµСЂР°С‚РѕСЂ РґРµР»РµРЅРёСЏ
 	} else if (operations.top() == "/") {
 		if (a != 0) {
 			b = numbers.top();
@@ -139,7 +138,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 			std::string errorMsg = "in this expression, division by zero is prohibited";
 			throw std::runtime_error(errorMsg);
 		}
-	//оператор возведения в степень
+	//РѕРїРµСЂР°С‚РѕСЂ РІРѕР·РІРµРґРµРЅРёСЏ РІ СЃС‚РµРїРµРЅСЊ
 	} else if (operations.top() == "^") {
 		b = numbers.top();
 		numbers.pop();
@@ -147,21 +146,21 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 		numbers.push(c);
 		operations.pop();
 
-	//функция синуса
+	//С„СѓРЅРєС†РёСЏ СЃРёРЅСѓСЃР°
 	} else if (operations.top() == "sin") {
 		if (fabs(sin(a)) > eps) c = 0;
 		else c = sin(a);
 		numbers.push(c);
 		operations.pop();
 
-	//функция косинуса
+	//С„СѓРЅРєС†РёСЏ РєРѕСЃРёРЅСѓСЃР°
 	} else if (operations.top() == "cos") {
 		if (fabs(cos(a)) > eps) c = 0;
 		else c = cos(a);
 		numbers.push(c);
 		operations.pop();
 
-	//функция тангенса
+	//С„СѓРЅРєС†РёСЏ С‚Р°РЅРіРµРЅСЃР°
 	} else if (operations.top() == "tan") {
 		double ta,tb;
 		if (fabs(sin(a)) > eps) ta = 0;
@@ -176,7 +175,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 			numbers.push(c);
 		}
 
-	//функция котангенса
+	//С„СѓРЅРєС†РёСЏ РєРѕС‚Р°РЅРіРµРЅСЃР°
 	} else if (operations.top() == "ctg") {
 		double ta, tb;
 		if (fabs(sin(a)) > eps) ta = 0;
@@ -200,7 +199,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 
 
 int main() {
-	//приветствие пользователя, инструкция япользования калькулятором
+	//РїСЂРёРІРµС‚СЃС‚РІРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РёРЅСЃС‚СЂСѓРєС†РёСЏ СЏРїРѕР»СЊР·РѕРІР°РЅРёСЏ РєР°Р»СЊРєСѓР»СЏС‚РѕСЂРѕРј
 	std::cout << "======================================\n Hello! This programm is a calculator\n======================================\n";
 	std::cout << "Enter the mathematical expression:\n";
 
@@ -233,12 +232,12 @@ int main() {
 			}
 			
 		} else if (((strWithExpr[i] == '+' || strWithExpr[i] == '-') && !unaryFlag) || strWithExpr[i] == '/' || strWithExpr[i] == '*' || strWithExpr[i] == '^' ) {
-			if (operations.empty()) { // если стек с операциями пуст
+			if (operations.empty()) { // РµСЃР»Рё СЃС‚РµРє СЃ РѕРїРµСЂР°С†РёСЏРјРё РїСѓСЃС‚
 				std::string buf = "";
 				buf += strWithExpr[i];
 				operations.push(buf);
 				++i;
-			} else if (!operations.empty() && ((operationsRang[operations.top()]) >= ())) { // если стек с операциями не пуст и ранг последней в стеке выше или равен записываемому
+			} else if (!operations.empty() && ((operationsRang[operations.top()]) >= ())) { // РµСЃР»Рё СЃС‚РµРє СЃ РѕРїРµСЂР°С†РёСЏРјРё РЅРµ РїСѓСЃС‚ Рё СЂР°РЅРі РїРѕСЃР»РµРґРЅРµР№ РІ СЃС‚РµРєРµ РІС‹С€Рµ РёР»Рё СЂР°РІРµРЅ Р·Р°РїРёСЃС‹РІР°РµРјРѕРјСѓ
 				
 			}
 		}
