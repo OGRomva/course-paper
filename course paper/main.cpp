@@ -24,13 +24,21 @@ std::map<std::string, int> operationsRang {
 	{"sin", 4},
 	{"cos", 4},
 	{"tan", 4},
-	{"ctg", 4}
+	{"ctg", 4},
 };
 const double eps = 1e-10;
 
 //проверка на функцию
 bool isOperation(std::string& strWithExpr, size_t& i) {
-	if (strWithExpr[i] == '+' || strWithExpr[i] == '-' || strWithExpr[i] == '*' || strWithExpr[i] == '/' || strWithExpr[i] == 's' || strWithExpr[i] == 'c' || strWithExpr[i] == 't' || strWithExpr[i] == 'e') return true;
+	if (strWithExpr[i] == '+' ||
+		strWithExpr[i] == '-' ||
+		strWithExpr[i] == '*' ||
+		strWithExpr[i] == '/' ||
+		strWithExpr[i] == 's' ||
+		strWithExpr[i] == 'c' ||
+		strWithExpr[i] == 't' ||
+		strWithExpr[i] == 'e' ||
+		strWithExpr[i] == ')') return true;
 	return false;
 }
 
@@ -230,31 +238,46 @@ int main() {
 			
 		}
 
-		if (strWithExpr[i] >= '0' && strWithExpr[i] <= '9' || (unaryFlag && (strWithExpr[i] == '+' || strWithExpr[i] == '-'))) {
-			try {
-				numbers.push(numberparse(strWithExpr, i));
-				unaryFlag = false;
-				continue;
-			} catch (const std::runtime_error& e) {
-				std::cerr << e.what() << std::endl;
-				system("pause");
-				return 0;
+		// если прочитана открывающая скобка
+		if (strWithExpr[i] == '(') {
+			operations.push(chToStr(strWithExpr[i]));
+			unaryFlag = true;
+			++i;
+		}
+
+		// если прочитана закрывающая скобка
+		if (strWithExpr[i] == ')') {
+			while (operations.top() != "(") {
+				math(numbers, operations);
 			}
-			
-		} else if (((strWithExpr[i] == '+' || strWithExpr[i] == '-') && !unaryFlag) || strWithExpr[i] == '/' || strWithExpr[i] == '*' || strWithExpr[i] == '^' ) {
+			operations.pop();
+			++i;
+		}
+
+		// если прочитано число
+		if (strWithExpr[i] >= '0' && strWithExpr[i] <= '9' || (unaryFlag && (strWithExpr[i] == '+' || strWithExpr[i] == '-'))) {
+			numbers.push(numberparse(strWithExpr, i));
+			unaryFlag = false;
+			continue;
+		} else if (((strWithExpr[i] == '+' || strWithExpr[i] == '-') && !unaryFlag) || strWithExpr[i] == '/' || strWithExpr[i] == '*' || strWithExpr[i] == '^' ) { // если прочитана операция
 			if (operations.empty()) { // если стек с операциями пуст
 				std::string buf = "";
 				buf += strWithExpr[i];
 				operations.push(buf);
 				++i;
-			} else if (!operations.empty() && ((operationsRang[operations.top()]) < (operationsRang[chToStr(strWithExpr[i])]))) { // если стек с операциями не пуст и ранг последней в стеке выше или равен записываемому
+			} else if (!operations.empty() && ((operationsRang[operations.top()]) < (operationsRang[chToStr(strWithExpr[i])]))) { // если стек с операциями не пуст и ранг последней в стеке меньше записываемому
 				std::string buf = "";
 				buf += strWithExpr[i];
 				operations.push(buf);
 				++i;
-			} else if (!operations.empty() && ((operationsRang[operations.top()]) >= (operationsRang[chToStr(strWithExpr[i])]))) { // если стек с операциями не пуст и ранг последней операции в стеке ниже ранга текущей записываемой операции
+			} else if (!operations.empty() && ((operationsRang[operations.top()]) >= (operationsRang[chToStr(strWithExpr[i])])) && operations.top() != "(") { // если стек с операциями не пуст и ранг последней операции в стеке больше или равен текущей записываемой операции
 				math(numbers, operations);
 				continue;
+			} else if (!operations.empty() && operations.top() == "(") {
+				std::string buf = "";
+				buf += strWithExpr[i];
+				operations.push(buf);
+				++i;
 			}
 		}
 	}
