@@ -3,6 +3,16 @@
 #include <stack>
 #include <string>
 
+
+
+
+//функция преобразовывающая char в string 
+std::string chToStr(char a) {
+	std::string buf;
+	buf.push_back(a);
+	return buf;
+}
+
 //через map мы будем определять ранг операции, на создавая отдельных функций
 std::map<std::string, int> operationsRang {
 	{"+", 1},
@@ -237,8 +247,14 @@ int main() {
 				buf += strWithExpr[i];
 				operations.push(buf);
 				++i;
-			} else if (!operations.empty() && ((operationsRang[operations.top()]) >= ())) { // если стек с операциями не пуст и ранг последней в стеке выше или равен записываемому
-				
+			} else if (!operations.empty() && ((operationsRang[operations.top()]) < (operationsRang[chToStr(strWithExpr[i])]))) { // если стек с операциями не пуст и ранг последней в стеке выше или равен записываемому
+				std::string buf = "";
+				buf += strWithExpr[i];
+				operations.push(buf);
+				++i;
+			} else if (!operations.empty() && ((operationsRang[operations.top()]) >= (operationsRang[chToStr(strWithExpr[i])]))) { // если стек с операциями не пуст и ранг последней операции в стеке ниже ранга текущей записываемой операции
+				math(numbers, operations);
+				continue;
 			}
 		}
 	}
