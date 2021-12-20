@@ -1,21 +1,21 @@
-#include <string>
+п»ї#include <string>
 #include <stack>
 #ifndef FUNC1
 #define FUNC1
 
-	//функция преобразовывающая char в string 
+	//С„СѓРЅРєС†РёСЏ РїСЂРµРѕР±СЂР°Р·РѕРІС‹РІР°СЋС‰Р°СЏ char РІ string 
 	std::string chToStr(char);
 
-	//проверка на функцию
+	//РїСЂРѕРІРµСЂРєР° РЅР° С„СѓРЅРєС†РёСЋ
 	bool isOperation(std::string&, size_t&);
 
-	//нахождение функции и записывание ее в стек операций
+	//РЅР°С…РѕР¶РґРµРЅРёРµ С„СѓРЅРєС†РёРё Рё Р·Р°РїРёСЃС‹РІР°РЅРёРµ РµРµ РІ СЃС‚РµРє РѕРїРµСЂР°С†РёР№
 	void funcWrite(std::string&, size_t&, std::string&);
 
-	//парсинг строки в число
+	//РїР°СЂСЃРёРЅРі СЃС‚СЂРѕРєРё РІ С‡РёСЃР»Рѕ
 	double numberparse(std::string&, size_t&);
 
-	//вызов функции рассчета
+	//РІС‹Р·РѕРІ С„СѓРЅРєС†РёРё СЂР°СЃСЃС‡РµС‚Р°
 	void math(std::stack<double>&, std::stack<std::string>&);
 
 #endif

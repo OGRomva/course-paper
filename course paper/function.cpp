@@ -1,19 +1,19 @@
-#include "functions.h";
+п»ї#include "functions.h";
 
-//класс, созданный для вызова исключений
+//РєР»Р°СЃСЃ, СЃРѕР·РґР°РЅРЅС‹Р№ РґР»СЏ РІС‹Р·РѕРІР° РёСЃРєР»СЋС‡РµРЅРёР№
 struct errors {
 	std::string errorMsg;
 	errors(std::string errorMsg) : errorMsg(errorMsg) {};
 };
 
-//функция преобразовывающая char в string 
+//С„СѓРЅРєС†РёСЏ РїСЂРµРѕР±СЂР°Р·РѕРІС‹РІР°СЋС‰Р°СЏ char РІ string 
 std::string chToStr(char a) {
 	std::string buf;
 	buf.push_back(a);
 	return buf;
 }
 
-//проверка на функцию
+//РїСЂРѕРІРµСЂРєР° РЅР° С„СѓРЅРєС†РёСЋ
 bool isOperation(std::string& strWithExpr, size_t& i) {
 	if (strWithExpr[i] == '+' ||
 		strWithExpr[i] == '-' ||
@@ -28,7 +28,7 @@ bool isOperation(std::string& strWithExpr, size_t& i) {
 	return false;
 }
 
-//нахождение функции и записывание ее в стек операций
+//РЅР°С…РѕР¶РґРµРЅРёРµ С„СѓРЅРєС†РёРё Рё Р·Р°РїРёСЃС‹РІР°РЅРёРµ РµРµ РІ СЃС‚РµРє РѕРїРµСЂР°С†РёР№
 void funcWrite(std::string& strWithExpr, size_t& i, std::string& func) {
 	func = "";
 
@@ -64,7 +64,7 @@ void funcWrite(std::string& strWithExpr, size_t& i, std::string& func) {
 	}
 }
 
-//парсинг строки в число
+//РїР°СЂСЃРёРЅРі СЃС‚СЂРѕРєРё РІ С‡РёСЃР»Рѕ
 double numberparse(std::string& strWithExpr, size_t& i) {
 	std::string buf;
 	bool shouldExit = false;
@@ -97,7 +97,7 @@ double numberparse(std::string& strWithExpr, size_t& i) {
 	return std::stod(buf);
 }
 
-//вызов функции рассчета
+//РІС‹Р·РѕРІ С„СѓРЅРєС†РёРё СЂР°СЃСЃС‡РµС‚Р°
 void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 	double a, b, c;
 	const double eps = 1e-10;
@@ -105,7 +105,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 	a = numbers.top();
 	numbers.pop();
 
-	//оператор сложения
+	//РѕРїРµСЂР°С‚РѕСЂ СЃР»РѕР¶РµРЅРёСЏ
 	if (operations.top() == "+") {
 		if (numbers.empty()) {
 			throw errors("the absence of a second operand for a binary operation");
@@ -117,7 +117,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 			operations.pop();
 		}
 
-	//оператор умножения
+	//РѕРїРµСЂР°С‚РѕСЂ СѓРјРЅРѕР¶РµРЅРёСЏ
 	} else if (operations.top() == "*") {
 		if (numbers.empty()) {
 			throw errors("the absence of a second operand for a binary operation");
@@ -128,7 +128,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 			numbers.push(c);
 			operations.pop();
 		}
-	//оператор вычитания
+	//РѕРїРµСЂР°С‚РѕСЂ РІС‹С‡РёС‚Р°РЅРёСЏ
 	} else if (operations.top() == "-") {
 		if (numbers.empty()) {
 			throw errors("the absence of a second operand for a binary operation");
@@ -139,7 +139,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 			numbers.push(c);
 			operations.pop();
 		}
-	//оператор деления
+	//РѕРїРµСЂР°С‚РѕСЂ РґРµР»РµРЅРёСЏ
 	} else if (operations.top() == "/") {
 		if (numbers.empty()) {
 			throw errors("the absence of a second operand for a binary operation");
@@ -152,7 +152,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 				operations.pop();
 			} else throw errors("in this expression, division by zero is prohibited");
 		}
-	//оператор возведения в степень
+	//РѕРїРµСЂР°С‚РѕСЂ РІРѕР·РІРµРґРµРЅРёСЏ РІ СЃС‚РµРїРµРЅСЊ
 	} else if (operations.top() == "^") {
 		if (numbers.empty()) {
 			throw errors("the absence of a second operand for a binary operation");
@@ -163,21 +163,21 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 			numbers.push(c);
 			operations.pop();
 		}
-	//функция синуса
+	//С„СѓРЅРєС†РёСЏ СЃРёРЅСѓСЃР°
 	} else if (operations.top() == "sin") {
 		if (fabs(sin(a)) < eps) c = 0;
 		else c = sin(a);
 		numbers.push(c);
 		operations.pop();
 
-	//функция косинуса
+	//С„СѓРЅРєС†РёСЏ РєРѕСЃРёРЅСѓСЃР°
 	} else if (operations.top() == "cos") {
 		if (fabs(cos(a)) < eps) c = 0;
 		else c = cos(a);
 		numbers.push(c);
 		operations.pop();
 
-	//функция тангенса
+	//С„СѓРЅРєС†РёСЏ С‚Р°РЅРіРµРЅСЃР°
 	} else if (operations.top() == "tan") {
 		double ta, tb;
 		if (fabs(sin(a)) < eps) ta = 0;
@@ -192,7 +192,7 @@ void math(std::stack<double>& numbers, std::stack<std::string>& operations) {
 			numbers.push(c);
 		}
 
-	//функция котангенса
+	//С„СѓРЅРєС†РёСЏ РєРѕС‚Р°РЅРіРµРЅСЃР°
 	} else if (operations.top() == "ctg") {
 		double ta, tb;
 		if (fabs(sin(a)) < eps) ta = 0;
