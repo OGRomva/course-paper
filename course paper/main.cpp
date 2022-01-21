@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <map>
+#include <math.h>
 #include <stack>
 #include "functions.h";
 
@@ -31,16 +32,16 @@ int main() {
 	std::cout << " To enter the function sinus, cosinus, tangent, cotangent and expanent, \n write sin(...), cos(...), tan(...), ctg(...) and exp(...) \n";
 	std::cout << "Enter the mathematical expression:\n";
 
-	size_t i = 0;
-	std::string strWithExpr;
 	bool unaryFlag = true;
-	bool haveParenthesis = false;
+	short countParenthesis = 0;
 	const double pi = acos(-1);
-	std::getline(std::cin, strWithExpr);
-
 	std::stack <double> numbers;
 	std::stack <std::string> operations;
-	
+	size_t i = 0;
+
+	std::string strWithExpr;
+	std::getline(std::cin, strWithExpr);
+
  	while (i < strWithExpr.size()) {
 		if (strWithExpr[i] == ' ') ++i;
 
@@ -54,6 +55,7 @@ int main() {
 				system("pause");
 				return 0;
 			}
+
 			if (func != "0") {
 				operations.push(func);
 				func = "0";
@@ -63,19 +65,19 @@ int main() {
 		// если прочитана открывающая скобка
 		if (strWithExpr[i] == '(') {
 			operations.push(chToStr(strWithExpr[i]));
-			haveParenthesis = true;
+			++countParenthesis;
 			unaryFlag = true;
 			++i;
 		}
 
-		if (haveParenthesis && (i == strWithExpr.size() - 1) && (strWithExpr[i] != ')')) {
+		if ((countParenthesis > 0) && (i == strWithExpr.size() - 1) && (strWithExpr[i] != ')')) {
 			std::cerr << "missing closing parenthesis" << std::endl;
 			system("pause");
 			return 0;
 		}
 
 		// если прочитана закрывающая скобка
-		if (strWithExpr[i] == ')') {
+		if (strWithExpr[i] == ')' && countParenthesis != 0) {
 			while (operations.top() != "(") {
 				try {
 					math(numbers, operations);
@@ -85,9 +87,15 @@ int main() {
 					return 0;
 				}
 			}
-			haveParenthesis = false;
+
+			--countParenthesis;
 			operations.pop();
 			++i;
+
+		} else if (strWithExpr[i] == ')' && countParenthesis == 0) {
+			std::cerr << "missing opening parenthesis" << std::endl;
+			system("pause");
+			return 0;
 		}
 
 		// если прочитано число
@@ -118,8 +126,14 @@ int main() {
 				operations.push(buf);
 				++i;
 			} else if (!operations.empty() && ((operationsRang[operations.top()]) >= (operationsRang[chToStr(strWithExpr[i])])) && operations.top() != "(") { // если стек с операциями не пуст и ранг последней операции в стеке больше или равен текущей записываемой операции
-				math(numbers, operations);
-				continue;
+				try {
+					math(numbers, operations);
+					continue;
+				} catch (const errors& error) {
+					std::cerr << error.errorMsg << " pos: " << i + 1 << std::endl;
+					system("pause");
+					return 0;
+				}
 			} else if (!operations.empty() && operations.top() == "(") {
 				std::string buf = "";
 				buf += strWithExpr[i];
